@@ -1,6 +1,9 @@
 import axios from "axios"
+import {tokenService} from "@/services/authService"
 
-const http = async (url, param, method, header = {}) => {
+const http = async (url, param, method, header = {
+    'x-auth-token' : tokenService.fetchToken().accessToken
+}) => {
 
     if (process.env.NODE_ENV == "development") {
         console.log("========[Start][" + method + "]", url, "=========")

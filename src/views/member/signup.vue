@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import authService from "@/services/authService";
+import {apiService} from "@/services/authService";
 import encryption from "@/plugins/encryption";
 
 require('@/assets/css/login.css')
@@ -60,7 +60,7 @@ export default {
         return
       }
       const result
-          = await authService.signup({email: encryption.encrypt(this.email), pwd: encryption.encrypt(this.pwd)})
+          = await apiService.signup({email: encryption.encrypt(this.email), pwd: encryption.encrypt(this.pwd)})
 
       if (result.data.code === 101) {
         alert('이메일이 이미 사용중입니다. 다른이메일을 사용해주세요')

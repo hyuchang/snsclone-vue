@@ -12,13 +12,13 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'Home',
+    name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '@/views/member/login')
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/member/signup')
+    component: () => import(/* webpackChunkName: "signup" */ '@/views/member/signup')
   }
 
 ]

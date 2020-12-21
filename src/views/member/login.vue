@@ -23,7 +23,7 @@
 </template>
 <script>
 require('@/assets/css/login.css')
-import authService from "@/services/authService"
+import {apiService, tokenService} from "@/services/authService"
 import encryption from "@/plugins/encryption";
 export default {
   data(){
@@ -56,22 +56,24 @@ export default {
         this.isSubmit = false
         return
       }
-      const result
-          = await authService.login({email:encryption.encrypt(this.loginData.email),pwd:encryption.encrypt(this.loginData.pwd)})
-      if ( result.data.code === 103) {
-        alert('아이디 또는 비밀번호를 확인해주세요')
+      try{
+        const result
+            = await apiService.login({email:encryption.encrypt(this.loginData.email),pwd:encryption.encrypt(this.loginData.pwd)})
+        if ( result.data.code === 103) {
+          alert('아이디 또는 비밀번호를 확인해주세요')
+          this.isSubmit = false
+          return
+        } else if (result.data.code === 104){
+          alert('제재된 계정입니다. 관리자에게 문의하세요.')
+          this.isSubmit = false
+          return
+        } else if (result.data.code == 0){
+          tokenService.commit(result.data.data.authToken,result.data.data.user)
+        }
+        this.$router.push('/')
+      }catch (e){
         this.isSubmit = false
-        return
-      } else if (result.data.code === 104){
-        alert('제재된 계정입니다. 관리자에게 문의하세요.')
-        this.isSubmit = false
-        return
-      } else if (result.data.code == 0){
-        console.log(result.data.data.authToken)
-        authService.token.commit(result.data.data.authToken)
       }
-
-      this.$router.push('/')
     }
   }
 }
