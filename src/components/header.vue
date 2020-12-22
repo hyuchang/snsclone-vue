@@ -12,29 +12,30 @@
           </router-link>
         </h1>
 
-        <div class="search_field">
-          <input type="text" placeholder="검색" tabindex="0">
+<!--        <div class="search_field">-->
+<!--          <input type="text" placeholder="검색" tabindex="0">-->
 
-          <div class="fake_field">
-            <span class=sprite_small_search_icon></span>
-            <span>검색</span>
-          </div>
-        </div>
+<!--          <div class="fake_field">-->
+<!--            <span class=sprite_small_search_icon></span>-->
+<!--            <span>검색</span>-->
+<!--          </div>-->
+<!--        </div>-->
 
 
         <div class="right_icons">
-          <router-link to="new_post.html">
+          <router-link to="/create">
             <div class="sprite_camera_icon"></div>
           </router-link>
           <router-link to="login.html">
-            <div class="sprite_compass_icon"></div>
+<!--            <div class="sprite_compass_icon"></div>-->
           </router-link>
           <router-link to="follow.html">
-            <div class="sprite_heart_icon_outline"></div>
+<!--            <div class="sprite_heart_icon_outline"></div>-->
           </router-link>
           <router-link to="profile.html">
-            <div class="sprite_user_icon_outline"></div>
+<!--            <div class="sprite_user_icon_outline"></div>-->
           </router-link>
+
         </div>
       </section>
     </header>

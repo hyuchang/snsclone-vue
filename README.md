@@ -1,24 +1,24 @@
 # sns-front
 
-## Project setup
+개발환경
+- vuejs 2.x
+
+
+실행 방법
+1. NODE JS 설치( 각 홈페이지에서 다운로드 가능)
+2. node_modules 초기화(npm install)
+3. 구동(npm run serve)
+
+##node_modules 초기화 
 ```
-npm install
+1. cd {PROJECT_ROOT}
+2. npm install
 ```
 
-### Compiles and hot-reloads for development
+
+## 구동 방법
 ```
-npm run serve
+1. cd {PROJECT_ROOT}
+2. npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

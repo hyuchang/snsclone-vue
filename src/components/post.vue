@@ -22,10 +22,13 @@
 
       <div class="img_section">
         <div class="trans_inner" @dblclick="toggleLike(item)">
-          <!--          <div v-if="item.imageList.length == 1"><img src="@/assets/imgs/img_section/img01.jpg" alt="visual01"></div>-->
-          <!--          <div v-else>-->
-          <!--          </div>-->
-          <img src="@/assets/imgs/img_section/img01.jpg" alt="visual01">
+          <div v-if="item.imageList.length>0">
+            <img :src="item.imageList[0].path" alt="image" onerror="this.src='https://previews.123rf.com/images/roxanabalint/roxanabalint1308/roxanabalint130800213/21703166-%EC%98%88-%EA%B7%B8%EB%9F%B0-%EC%A7%80-%EA%B3%A0%EB%AC%B4-%EC%8A%A4%ED%83%AC%ED%94%84-%EB%B2%A1%ED%84%B0-%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8-%EB%A0%88%EC%9D%B4-%EC%85%98.jpg'">
+          </div>
+          <div v-else>
+            <img src="@/assets/imgs/img_section/img01.jpg" alt="image" >
+          </div>
+
         </div>
       </div>
 
@@ -44,19 +47,26 @@
       </div>
 
       <div class="likes m_text">
-        <span v-show="item.likeCnt>0">
+        <span>
         좋아요
         <span id="like-count">{{ item.likeCnt }}</span>
         <span id="bookmark-count"></span>
         개
         </span>
-        <span v-show="item.commentCnt>0">
+        <span>
         댓글 수
         <span id="like-count">{{ item.commentCnt }}</span>
         <span id="bookmark-count"></span>
         개
         </span>
       </div>
+
+      <div class="comment_container">
+        <div class="comment" v-text="item.description" style="white-space: pre;">
+        </div>
+      </div>
+
+
       <div class="timer">{{moment(new Date()).startOf('hour').fromNow()}}</div>
       <div class="comment_container">
         <div class="comment">
@@ -94,6 +104,7 @@ export default {
   mounted() {
     moment.locale('ko');
     this.fetchData()
+    window.eventBus.$on('refreshSomeUser', this.fetchSomeOneData)
   },
   watch:{
     comment(v){
@@ -105,6 +116,15 @@ export default {
   methods: {
     async fetchData() {
       const result = await postService.fetchData({page: this.page})
+      if (result.data.code == 0) {
+        this.posts = result.data.data
+        this.posts.forEach(x => {
+          x['like'] = x.likeList.filter(y => y.userId == this.user.uid).length > 0
+        })
+      }
+    },
+    async fetchSomeOneData(someId) {
+      const result = await postService.fetchBySomeData({someId: someId,page: this.page})
       if (result.data.code == 0) {
         this.posts = result.data.data
         this.posts.forEach(x => {

@@ -19,7 +19,7 @@
           <img src="@/assets/imgs/thumb02.jpg" alt="프로필사진">
         </div>
 
-        <div class="detail">
+        <div class="detail" style="cursor: pointer" @click="refreshPost(rel.requesterId == user.uid?rel.someoneId:rel.requesterId)">
           <div class="id">
             {{rel.requesterId == user.uid?rel.someoneUser.nickname:rel.reqUser.nickname}}
           </div>
@@ -60,6 +60,9 @@ export default {
     async updateStatus(v){
       await relationService.updateRelation(v.requesterId, v.someoneId, v.status?2:3)
       this.fetchData()
+    },
+    async refreshPost(id){
+      window.eventBus.$emit("refreshSomeUser", id)
     }
   }
 }
