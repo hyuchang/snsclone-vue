@@ -265,7 +265,7 @@ body{
     display:flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 10px;
+    padding: 15px 21px;
 }
 .contents .comment_container .comment{
     display:flex;

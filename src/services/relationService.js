@@ -5,6 +5,6 @@ export default  {
         return await http('v1/relations', {},'GET')
     },
     async updateRelation(requesterId, someoneId, status) {
-        return await http('v1/users/signup',{requesterId:requesterId, someoneId:someoneId, status:status} , 'post')
+        return await http('v1/relations',{requesterId:requesterId, someoneId:someoneId, status:status} , 'PUT')
     }
 }

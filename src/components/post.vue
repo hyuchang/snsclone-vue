@@ -11,13 +11,13 @@
             <div class="country s_text">{{ item.userInfo.email }}</div>
           </div>
         </div>
-        <div class="sprite_more_icon" data-name="more">
-          <ul class="toggle_box">
-            <li><input type="submit" class="follow" value="팔로우" data-name="follow"></li>
-            <li>수정</li>
-            <li>삭제</li>
-          </ul>
-        </div>
+<!--        <div class="sprite_more_icon" data-name="more">-->
+<!--          <ul class="toggle_box">-->
+<!--            <li><input type="submit" class="follow" value="팔로우" data-name="follow"></li>-->
+<!--            <li>수정</li>-->
+<!--            <li>삭제</li>-->
+<!--          </ul>-->
+<!--        </div>-->
       </header>
 
       <div class="img_section">
@@ -36,7 +36,7 @@
                  data-name="heartbeat"></div>
           </div>
           <div class="sprite_bubble_icon"></div>
-          <div class="sprite_share_icon" data-name="share"></div>
+<!--          <div class="sprite_share_icon" data-name="share"></div>-->
         </div>
         <!--            <div class="right_icon">-->
         <!--              <div class="sprite_bookmark_outline" data-name="bookmark"></div>-->
@@ -44,33 +44,35 @@
       </div>
 
       <div class="likes m_text">
+        <span v-show="item.likeCnt>0">
         좋아요
         <span id="like-count">{{ item.likeCnt }}</span>
         <span id="bookmark-count"></span>
         개
-        |
+        </span>
+        <span v-show="item.commentCnt>0">
         댓글 수
         <span id="like-count">{{ item.commentCnt }}</span>
         <span id="bookmark-count"></span>
         개
+        </span>
       </div>
-      <div class="timer">1시간 전</div>
-      <div class="comment_container" >
-        <div class="comment" >
+      <div class="timer">{{moment(new Date()).startOf('hour').fromNow()}}</div>
+      <div class="comment_container">
+        <div class="comment">
           <div class="comment-detail" v-for="commentInfo in item.commentList" :key="commentInfo.id">
             <div class="nick_name m_text">{{ commentInfo.userInfo.nickname }}</div>
             <div>{{ commentInfo.comment }}</div>
             <div class="small_heart">
-              <div class="timer2"> 1시간전</div>
+              <div class="timer2">{{moment(commentInfo.createAt).fromNow()}}</div>
             </div>
           </div>
         </div>
-
       </div>
 
 
       <div class="comment_field" id="add-comment-post37">
-        <input type="text" v-model="comment" placeholder="댓글달기...">
+        <input type="text" placeholder="댓글달기..." maxlength="100" :ref="'comment_'+item.id">
         <div class="upload_btn m_text" data-name="comment" @click="createComment(item.id)">게시</div>
       </div>
     </article>
@@ -78,23 +80,36 @@
 </template>
 <script>
 import postService from "@/services/postService";
-
+import {tokenService} from "@/services/authService";
+import moment from 'moment'
 export default {
   data() {
     return {
       posts: [],
       page: 1,
-      comment: ''
+      user: tokenService.fetchUser(),
+      moment : moment
     }
   },
   mounted() {
+    moment.locale('ko');
     this.fetchData()
+  },
+  watch:{
+    comment(v){
+      if(v.length > 120){
+        return v.substr(0, 120)
+      }
+    }
   },
   methods: {
     async fetchData() {
       const result = await postService.fetchData({page: this.page})
       if (result.data.code == 0) {
         this.posts = result.data.data
+        this.posts.forEach(x => {
+          x['like'] = x.likeList.filter(y => y.userId == this.user.uid).length > 0
+        })
       }
     },
     async toggleLike(item) {
@@ -109,15 +124,14 @@ export default {
       }
       if (result.data.code == 0) {
         item.like = !item.like
-
       }
     },
     async createComment(id) {
-      if ( !this.comment ) return
-      const result = await postService.createComment({id: id, comment: this.comment})
+      if (!this.$refs[`comment_${id}`][0].value) return
+      const result = await postService.createComment({id: id, comment: this.$refs[`comment_${id}`][0].value})
       if (result.data.code == 0) {
         await this.fetchData()
-        this.comment = ''
+        this.$refs[`comment_${id}`][0].value = ''
       }
     },
     async deleteComment(id) {
